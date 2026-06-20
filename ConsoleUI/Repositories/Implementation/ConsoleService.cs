@@ -25,7 +25,7 @@ namespace NetCoreConsoleApp.Repositories.Implementation
             {
                 Console.WriteLine("=== C# Basics Menu ===");
                 Console.WriteLine("1. Division.");
-                Console.WriteLine("Press Escape key to exit.");
+                Console.Write("Select an option (or press X to exit): ");
 
                 ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: false);
                 char choice = char.ToLower(keyInfo.KeyChar);
@@ -36,6 +36,8 @@ namespace NetCoreConsoleApp.Repositories.Implementation
                     break;
                 }
 
+                Console.WriteLine("\n\n------------------------------------------------------");
+                Console.WriteLine("------------------------------------------------------"); 
 
                 switch (choice)
                 {
@@ -62,7 +64,6 @@ namespace NetCoreConsoleApp.Repositories.Implementation
 
         private void RunDivisionDemo()
         {
-            Console.WriteLine("\n--- Division ---");
             Console.Write("Enter the first number (dividend): ");
             if (!double.TryParse(Console.ReadLine(), out double first))
             {
@@ -77,7 +78,8 @@ namespace NetCoreConsoleApp.Repositories.Implementation
                 return;
             }
 
-            Console.WriteLine("\n--- Running Division Methods ---");
+            _log.LogInformation("--- Running Division Methods ---");
+            _divisionService.Initialize(first, second);
             _divisionService.DivideWithExceptionAndCastDouble();
             _divisionService.DivideAndCastDouble();
             _divisionService.DivideAndCastInt();

@@ -6,8 +6,8 @@ namespace NetCoreConsoleApp.Repositories.Implementation
 {
     internal class DivisionService : IDivisionService
     {
-        private double _first { get; init; }
-        private double _second { get; init; }
+        private double _first;
+        private double _second;
 
         private readonly ILogger<DivisionService> _logger;
 
@@ -22,15 +22,24 @@ namespace NetCoreConsoleApp.Repositories.Implementation
             _logger = logger;
         }
 
+        public void Initialize(double first, double second)
+        {
+            _first = first;
+            _second = second;
+        }
+
         public void DivideWithExceptionAndCastDouble()
         {
             if (_second == 0)
             {
-                _logger.LogError("Cannot divide by zero");
+                _logger.LogError($"{nameof(DivideWithExceptionAndCastDouble)} : Cannot divide by zero.");
+                Console.WriteLine("\n");
+                return;
             }
 
             double result = _first / _second;
             Console.WriteLine($"{nameof(DivideWithExceptionAndCastDouble)} : {result}");
+            Console.WriteLine("\n");
         }
 
         public void DivideAndCastDouble()
@@ -38,18 +47,41 @@ namespace NetCoreConsoleApp.Repositories.Implementation
             double result = _first / _second;
             if (result == double.PositiveInfinity)
             {
-                _logger.LogError("PositiveInfinity => _first={0}, _second={1}", _first, _second);
+                _logger.LogError($"{nameof(DivideAndCastDouble)} : PositiveInfinity => _first= {_first}, _second={_second}");
             }
             else
             {
                 Console.WriteLine($"{nameof(DivideAndCastDouble)} : {result}");
             }
+
+            Console.WriteLine("\n");
         }
 
         public void DivideAndCastInt()
         {
-            int result = (int)(_first / _second);
-            Console.WriteLine($"{nameof(DivideAndCastInt)} : {result}");
+            unchecked
+            {
+                Console.WriteLine("Unchecked:");
+                int result = (int)(_first / _second);
+                Console.WriteLine($"{nameof(DivideAndCastInt)} : {result}");
+            }
+
+            try
+            {
+                checked
+                {
+                    Console.WriteLine("\nChecked:");
+                    int result = (int)(_first / _second);
+                    Console.WriteLine($"{nameof(DivideAndCastInt)} : {result}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"{nameof(DivideAndCastInt)} : Something went wrong - {ex.GetType()} {ex.Message}");
+            }
+
+
+            Console.WriteLine("\n");
         }
 
         public void DivideAndCastFloat()
@@ -61,7 +93,11 @@ namespace NetCoreConsoleApp.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogCritical("Something went wrong: {0}", ex.Message);
+                _logger.LogCritical($"{nameof(DivideAndCastFloat)} : Something went wrong: {ex.Message}");
+            }
+            finally
+            {
+                Console.WriteLine("\n");
             }
         }
 
@@ -69,12 +105,18 @@ namespace NetCoreConsoleApp.Repositories.Implementation
         {
             try
             {
-                decimal result = (decimal)(_first / _second);
+                var initialValue = (_first / _second);
+                Console.WriteLine($"Initial Value = {initialValue}");
+                decimal result = (decimal)initialValue;
                 Console.WriteLine($"{nameof(DivideAndCastDecimal)} : {result}");
             }
             catch (Exception ex)
             {
                 _logger.LogCritical($"{nameof(DivideAndCastDecimal)} - Something went wrong: {ex.Message}");
+            }
+            finally
+            {
+                Console.WriteLine("\n");
             }
         }
     }
