@@ -27,6 +27,7 @@ namespace NetCoreConsoleApp
                 .ConfigureServices((context, services) =>
                 {
                     /*---REGISTER SERVICES HERE---*/
+                    services.AddScoped<IDivisionService, DivisionService>();
                     services.AddScoped<IConsoleService, ConsoleService>();
                 })
                 .UseSerilog()
