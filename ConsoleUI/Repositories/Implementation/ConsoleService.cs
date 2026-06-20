@@ -9,14 +9,14 @@ namespace NetCoreConsoleApp.Repositories.Implementation
     public class ConsoleService : IConsoleService
     {
         private readonly ILogger<ConsoleService> _log;
-        private readonly IConfiguration _config;
         private readonly IDivisionService _divisionService;
+        private readonly IDoubleService _doubleService;
 
-        public ConsoleService(IDivisionService divisionService, ILogger<ConsoleService> log, IConfiguration config)
+        public ConsoleService(IDivisionService divisionService, ILogger<ConsoleService> log, IDoubleService doubleService)
         {
             _log = log;
-            _config = config;
             _divisionService = divisionService;
+            _doubleService = doubleService;
         }
 
         public async Task Run()
@@ -25,6 +25,7 @@ namespace NetCoreConsoleApp.Repositories.Implementation
             {
                 Console.WriteLine("=== C# Basics Menu ===");
                 Console.WriteLine("1. Division.");
+                Console.WriteLine("2. Double.");
                 Console.Write("Select an option (or press X to exit): ");
 
                 ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: false);
@@ -48,17 +49,19 @@ namespace NetCoreConsoleApp.Repositories.Implementation
 
                         _log.LogInformation("Done running Division!");
                         break;
+                    case '2':
+                        _log.LogInformation("Running Double...\n");
+
+                        _doubleService.AdditionError();
+
+                        _log.LogInformation("Done running Double!\n");
+                        break;
                     default:
-                        Console.ForegroundColor = ConsoleColor.Red;
                         _log.LogError("\nInvalid option. Please try again.");
-                        Console.WriteLine("\nInvalid option. Please try again.");
-                        Console.ForegroundColor = ConsoleColor.White;
                         break;
                 }
                 Console.WriteLine("------------------------------------------------------");
                 Console.WriteLine("------------------------------------------------------");
-
-
             } while (true);
         }
 
